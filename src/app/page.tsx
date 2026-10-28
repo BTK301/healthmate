@@ -1,7 +1,3 @@
-"use client";
-
-import { motion } from "motion/react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   Activity,
@@ -16,24 +12,10 @@ import {
   Sparkles,
   Utensils,
 } from "lucide-react";
-import { LogoLockup, LogoMark, BrandCorner } from "@/components/brand/Logo";
+import { BrandCorner, LogoLockup, LogoMark } from "@/components/brand/Logo";
+import { HeroOrb } from "@/components/landing/HeroOrb";
+import { Reveal } from "@/components/landing/Reveal";
 import { cn } from "@/lib/cn";
-
-const HealthOrb = dynamic(() => import("@/components/three/HealthOrb"), {
-  ssr: false,
-});
-
-const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease } },
-};
-
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
-};
 
 /* ------------------------------------------------------------------ */
 
@@ -75,27 +57,9 @@ function Nav() {
 function Vitals() {
   const items = [
     { icon: Activity, label: "Đạm", value: "96", unit: "g", tone: "text-good" },
-    {
-      icon: Droplets,
-      label: "Nước",
-      value: "1,6",
-      unit: "L",
-      tone: "text-navy",
-    },
-    {
-      icon: Footprints,
-      label: "Bước chân",
-      value: "6.240",
-      unit: "b",
-      tone: "text-navy",
-    },
-    {
-      icon: HeartPulse,
-      label: "Huyết áp",
-      value: "118/76",
-      unit: "",
-      tone: "text-navy",
-    },
+    { icon: Droplets, label: "Nước", value: "1,6", unit: "L", tone: "text-navy" },
+    { icon: Footprints, label: "Bước chân", value: "6.240", unit: "b", tone: "text-navy" },
+    { icon: HeartPulse, label: "Huyết áp", value: "118/76", unit: "", tone: "text-navy" },
   ] as const;
 
   return (
@@ -112,16 +76,14 @@ function Vitals() {
           <div className="mt-1 flex items-baseline gap-1">
             <span
               className={cn(
-                "tabular font-display text-[19px] font-bold leading-none",
+                "tabular font-display text-[19px] leading-none font-bold",
                 it.tone,
               )}
             >
               {it.value}
             </span>
             {it.unit ? (
-              <span className="text-[10px] font-medium text-muted">
-                {it.unit}
-              </span>
+              <span className="text-[10px] font-medium text-muted">{it.unit}</span>
             ) : null}
           </div>
         </div>
@@ -140,10 +102,7 @@ function AppPreview() {
             "radial-gradient(60% 60% at 50% 40%, #bfe9d5 0%, #f9d6b4 55%, transparent 100%)",
         }}
       />
-      <motion.div
-        variants={fadeUp}
-        className="relative rounded-[32px] border border-white/70 bg-surface p-5 shadow-float"
-      >
+      <div className="relative rounded-[32px] border border-white/70 bg-surface p-5 shadow-float">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[13px] leading-tight font-semibold text-navy">
@@ -159,7 +118,7 @@ function AppPreview() {
         </div>
 
         <div className="relative mt-2 grid h-[182px] place-items-center">
-          <HealthOrb className="absolute top-1/2 left-1/2 h-[200px] w-[200px] -translate-x-1/2 -translate-y-1/2" />
+          <HeroOrb className="absolute top-1/2 left-1/2 h-[200px] w-[200px] -translate-x-1/2 -translate-y-1/2" />
           <div className="relative text-center">
             <div className="flex items-start justify-center gap-1">
               <span className="tabular font-display text-[58px] leading-none font-extrabold tracking-[-0.05em] text-good">
@@ -216,7 +175,7 @@ function AppPreview() {
             </span>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -226,48 +185,32 @@ function AppPreview() {
 function Hero() {
   return (
     <section className="relative mx-auto max-w-[1180px] px-5 pt-10 pb-20 sm:pt-14 lg:pb-28">
-      <motion.div
-        variants={stagger}
-        initial="hidden"
-        animate="show"
-        className="grid items-center gap-14 lg:grid-cols-[1.02fr_0.98fr] lg:gap-10"
-      >
+      <div className="grid items-center gap-14 lg:grid-cols-[1.02fr_0.98fr] lg:gap-10">
         <div>
-          <motion.div variants={fadeUp}>
-            <span className="inline-flex items-center gap-2 rounded-pill border border-line bg-white/60 px-3 py-1.5 text-[11.5px] font-semibold text-navy">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-good opacity-60" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-good" />
-              </span>
-              Bản demo · không cần đăng ký
+          <span className="inline-flex items-center gap-2 rounded-pill border border-line bg-white/60 px-3 py-1.5 text-[11.5px] font-semibold text-navy">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-good opacity-60" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-good" />
             </span>
-          </motion.div>
+            Bản demo · không cần đăng ký
+          </span>
 
-          <motion.h1
-            variants={fadeUp}
-            className="mt-6 font-display text-[clamp(2.45rem,5vw,3.95rem)] font-extrabold text-navy"
-          >
+          <h1 className="mt-6 font-display text-[clamp(2.45rem,5vw,3.95rem)] font-extrabold text-navy">
             Biết cơ thể mình cần gì —{" "}
             <span className="relative inline-block whitespace-nowrap">
               <span className="relative z-10">ngay hôm nay</span>
               <span className="absolute inset-x-0 bottom-[0.06em] z-0 h-[0.32em] rounded-sm bg-lime/70" />
             </span>
             .
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            variants={fadeUp}
-            className="mt-6 max-w-[48ch] text-[16.5px] leading-relaxed text-muted"
-          >
+          <p className="mt-6 max-w-[48ch] text-[16.5px] leading-relaxed text-muted">
             HealthMate tính nhu cầu dinh dưỡng từ chính chỉ số của bạn, gợi ý
             thực đơn Việt quen thuộc — và cảnh báo khi món ăn không hợp với loại
             thuốc bạn đang dùng.
-          </motion.p>
+          </p>
 
-          <motion.div
-            variants={fadeUp}
-            className="mt-8 flex flex-wrap items-center gap-3"
-          >
+          <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               href="/demo"
               className="group inline-flex h-12 items-center gap-2 rounded-pill bg-navy px-6 text-[14px] font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0"
@@ -281,12 +224,9 @@ function Hero() {
             >
               Cách hoạt động
             </a>
-          </motion.div>
+          </div>
 
-          <motion.ul
-            variants={fadeUp}
-            className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px] font-medium text-muted"
-          >
+          <ul className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px] font-medium text-muted">
             <li className="inline-flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5 text-good" strokeWidth={2.4} />
               Dữ liệu lưu trên máy bạn
@@ -299,11 +239,11 @@ function Hero() {
               <Pill className="h-3.5 w-3.5 text-good" strokeWidth={2.4} />
               25 loại thuốc
             </li>
-          </motion.ul>
+          </ul>
         </div>
 
         <AppPreview />
-      </motion.div>
+      </div>
     </section>
   );
 }
@@ -321,7 +261,7 @@ const features = [
     icon: Utensils,
     title: "Thực đơn Việt, không phải salad",
     body: "Cơm tấm, phở, canh chua — gợi ý theo khẩu vị, ngân sách và thời gian nấu. Đổi món mà vẫn giữ đúng calo.",
-    tint: "bg-peach-soft text-peach",
+    tint: "bg-peach-soft text-peach-ink",
   },
   {
     icon: Pill,
@@ -337,29 +277,20 @@ function Features() {
       id="features"
       className="relative mx-auto max-w-[1180px] scroll-mt-24 px-5 pb-24"
     >
+      <h2 className="sr-only">Tính năng chính</h2>
       <div className="grid gap-4 md:grid-cols-3">
         {features.map((f, i) => (
-          <motion.article
-            key={f.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, ease, delay: i * 0.08 }}
-            className="group rounded-card border border-white/70 bg-surface p-6 shadow-card transition-transform duration-300 hover:-translate-y-1"
-          >
-            <span
-              className={cn(
-                "grid h-11 w-11 place-items-center rounded-2xl",
-                f.tint,
-              )}
-            >
-              <f.icon className="h-5 w-5" strokeWidth={2.2} />
-            </span>
-            <h3 className="mt-5 font-display text-[19px] font-bold">{f.title}</h3>
-            <p className="mt-2 text-[13.5px] leading-relaxed text-muted">
-              {f.body}
-            </p>
-          </motion.article>
+          <Reveal key={f.title} delay={i * 0.07}>
+            <article className="group h-full rounded-card border border-white/70 bg-surface p-6 shadow-card transition-transform duration-300 hover:-translate-y-1">
+              <span
+                className={cn("grid h-11 w-11 place-items-center rounded-2xl", f.tint)}
+              >
+                <f.icon className="h-5 w-5" strokeWidth={2.2} />
+              </span>
+              <h3 className="mt-5 font-display text-[19px] font-bold">{f.title}</h3>
+              <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{f.body}</p>
+            </article>
+          </Reveal>
         ))}
       </div>
     </section>
@@ -412,13 +343,11 @@ function HowItWorks() {
           <ol className="mt-10 grid gap-6 sm:grid-cols-3 sm:gap-8">
             {steps.map((s) => (
               <li key={s.n} className="relative">
-                <span className="tabular font-display text-[13px] font-extrabold text-peach">
+                <span className="tabular font-display text-[13px] font-extrabold text-peach-ink">
                   {s.n}
                 </span>
                 <div className="mt-2 h-px w-full bg-navy/10" />
-                <h3 className="mt-4 font-display text-[17px] font-bold">
-                  {s.title}
-                </h3>
+                <h3 className="mt-4 font-display text-[17px] font-bold">{s.title}</h3>
                 <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
                   {s.body}
                 </p>
@@ -459,7 +388,6 @@ function Footer() {
 export default function LandingPage() {
   return (
     <div id="top" className="relative min-h-dvh overflow-x-clip">
-      {/* atmosphere */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-[720px]"
@@ -472,10 +400,8 @@ export default function LandingPage() {
         aria-hidden
         className="halftone pointer-events-none absolute inset-x-0 top-0 h-[560px] opacity-60"
         style={{
-          maskImage:
-            "linear-gradient(to bottom, black 0%, black 35%, transparent 92%)",
-          WebkitMaskImage:
-            "linear-gradient(to bottom, black 0%, black 35%, transparent 92%)",
+          maskImage: "linear-gradient(to bottom, black 0%, black 35%, transparent 92%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 35%, transparent 92%)",
         }}
       />
 

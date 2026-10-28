@@ -73,8 +73,8 @@ export function Onboarding({
             />
             <p
               className={cn(
-                "mt-2 text-[10.5px] font-semibold tracking-wide",
-                i <= step ? "text-navy" : "text-muted/60",
+                "mt-2 text-[12px] font-semibold tracking-wide",
+                i <= step ? "text-navy" : "text-muted",
               )}
             >
               {title}
@@ -130,7 +130,7 @@ export function Onboarding({
                       </button>
                     ))}
                   </div>
-                  <p className="mt-2 text-[11px] text-muted">
+                  <p className="mt-2 text-[12px] text-muted">
                     Dùng để tính chuyển hoá cơ bản — không dùng cho mục đích khác.
                   </p>
                 </div>
@@ -212,7 +212,7 @@ export function Onboarding({
                       </button>
                     ))}
                   </div>
-                  <p className="mt-2 text-[11px] text-muted">
+                  <p className="mt-2 text-[12px] text-muted">
                     Nghề nghiệp ảnh hưởng đến nhu cầu năng lượng và lịch sinh
                     hoạt được gợi ý.
                   </p>
@@ -273,7 +273,7 @@ export function Onboarding({
                 </div>
 
                 <div className="rounded-2xl bg-canvas/70 p-4">
-                  <p className="text-[11.5px] leading-relaxed text-muted">
+                  <p className="text-[12.5px] leading-relaxed text-muted">
                     Bước tiếp theo bạn sẽ thêm thuốc đang dùng và bệnh nền. Đây
                     là phần giúp HealthMate đưa ra cảnh báo phù hợp — bạn có thể
                     bỏ qua và thêm sau.
@@ -296,7 +296,7 @@ export function Onboarding({
             Quay lại
           </button>
         ) : (
-          <span className="text-[11.5px] text-muted">
+          <span className="text-[12px] text-muted">
             <LogoMark className="mr-1 inline h-3.5 w-3.5 align-[-2px] text-good" />
             Không cần đăng ký
           </span>

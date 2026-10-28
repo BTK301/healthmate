@@ -170,7 +170,7 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
               onClick={() => setTab(t.id)}
               aria-current={tab === t.id}
               className={cn(
-                "flex flex-1 flex-col items-center gap-1 rounded-[15px] py-1.5 text-[9px] font-semibold transition-colors",
+                "flex flex-1 flex-col items-center gap-1 rounded-[15px] py-1.5 text-[10px] font-semibold transition-colors",
                 tab === t.id ? "bg-navy text-white" : "text-muted",
               )}
             >
