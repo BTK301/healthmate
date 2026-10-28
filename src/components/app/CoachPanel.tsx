@@ -4,43 +4,87 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUp, ShieldAlert, Sparkles, X } from "lucide-react";
 import { askCoach, SUGGESTED_CHIPS, type CoachContext } from "@/core/coach/coach";
+import { buildFacts } from "@/core/coach/prompt";
 import { cn } from "@/lib/cn";
 
 interface Msg {
   role: "user" | "coach";
   text: string;
   safety?: "red-flag" | "refusal";
+  source?: "rules" | "llm";
 }
 
 export function CoachPanel({ ctx }: { ctx: CoachContext }) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [usingLlm, setUsingLlm] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "coach",
       text: `Chào ${ctx.profile.name}. Mình đọc được hồ sơ, thực đơn và thuốc bạn đang dùng. Hỏi mình bất cứ điều gì về bữa ăn hôm nay.`,
+      source: "rules",
     },
   ]);
   const scroller = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" });
-  }, [messages, open]);
+    scroller.current?.scrollTo({
+      top: scroller.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages, open, busy]);
 
-  const send = (raw: string) => {
+  const send = async (raw: string) => {
     const text = raw.trim();
-    if (!text) return;
-    const answer = askCoach(text, ctx);
-    setMessages((m) => [
-      ...m,
-      { role: "user", text },
-      { role: "coach", text: answer.text, safety: answer.safety },
-    ]);
-    setInput("");
-  };
+    if (!text || busy) return;
 
-  const lastChips =
-    messages[messages.length - 1]?.role === "coach" ? SUGGESTED_CHIPS : SUGGESTED_CHIPS;
+    const local = askCoach(text, ctx);
+    setMessages((m) => [...m, { role: "user", text }]);
+    setInput("");
+
+    // red flags and refusals never touch the network
+    if (local.safety) {
+      setMessages((m) => [
+        ...m,
+        { role: "coach", text: local.text, safety: local.safety, source: "rules" },
+      ]);
+      return;
+    }
+
+    setBusy(true);
+    try {
+      const res = await fetch("/api/coach", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: text, facts: buildFacts(ctx) }),
+      });
+      const data = (await res.json()) as {
+        text?: string | null;
+        source?: string;
+      };
+
+      if (data.source === "llm" && data.text) {
+        setUsingLlm(true);
+        setMessages((m) => [
+          ...m,
+          { role: "coach", text: data.text as string, source: "llm" },
+        ]);
+      } else {
+        setMessages((m) => [
+          ...m,
+          { role: "coach", text: local.text, source: "rules" },
+        ]);
+      }
+    } catch {
+      setMessages((m) => [
+        ...m,
+        { role: "coach", text: local.text, source: "rules" },
+      ]);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   return (
     <>
@@ -81,7 +125,9 @@ export function CoachPanel({ ctx }: { ctx: CoachContext }) {
                 <div className="min-w-0 flex-1">
                   <p className="text-[13px] font-bold">HealthMate Coach</p>
                   <p className="text-[10px] text-muted">
-                    Trả lời từ engine tính toán, không tự sinh số liệu
+                    {usingLlm
+                      ? "Số liệu từ engine · diễn đạt bởi AI"
+                      : "Trả lời từ engine tính toán, không tự sinh số liệu"}
                   </p>
                 </div>
                 <button
@@ -110,20 +156,29 @@ export function CoachPanel({ ctx }: { ctx: CoachContext }) {
                           : "bg-canvas/80 text-navy",
                     )}
                   >
-                    {m.safety === "red-flag" ? (
-                      <ShieldAlert className="mb-1 h-3.5 w-3.5" />
-                    ) : null}
-                    {m.safety === "refusal" ? (
+                    {m.safety ? (
                       <ShieldAlert className="mb-1 h-3.5 w-3.5" />
                     ) : null}
                     {m.text}
                   </div>
                 ))}
+
+                {busy ? (
+                  <div className="flex max-w-[88%] items-center gap-1.5 rounded-2xl bg-canvas/80 px-3.5 py-2.5">
+                    {[0, 1, 2].map((i) => (
+                      <span
+                        key={i}
+                        className="h-1.5 w-1.5 animate-bounce rounded-full bg-navy/40"
+                        style={{ animationDelay: `${i * 120}ms` }}
+                      />
+                    ))}
+                  </div>
+                ) : null}
               </div>
 
               <div className="border-t border-line/70 px-3 pt-2.5 pb-3">
                 <div className="mb-2 flex gap-1.5 overflow-x-auto pb-1">
-                  {lastChips.map((c) => (
+                  {SUGGESTED_CHIPS.map((c) => (
                     <button
                       key={c}
                       type="button"
@@ -150,7 +205,8 @@ export function CoachPanel({ ctx }: { ctx: CoachContext }) {
                   <button
                     type="submit"
                     aria-label="Gửi"
-                    className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-navy text-white"
+                    disabled={busy}
+                    className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-navy text-white disabled:opacity-50"
                   >
                     <ArrowUp className="h-4 w-4" />
                   </button>
