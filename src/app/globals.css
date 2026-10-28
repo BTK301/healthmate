@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme {
+  /* ---- Surfaces ---- */
+  --color-canvas: #e8f5ec;
+  --color-canvas-deep: #d6eee2;
+  --color-surface: #ffffff;
+  --color-line: #dce9e2;
+
+  /* ---- Brand ---- */
+  --color-navy: #1f3a68;
+  --color-navy-soft: #e4eaf6;
+  --color-muted: #4e6072;
+
+  /* ---- Accents ---- */
+  --color-peach: #f5b173;
+  --color-peach-soft: #fdebd8;
+  --color-lime: #e4e96b;
+  --color-lime-soft: #f4f7c4;
+
+  /* ---- Semantic ---- */
+  --color-good: #1b7a46;
+  --color-good-soft: #dff2e6;
+  --color-warn: #e8a33d;
+  --color-danger: #e1674f;
+
+  /* ---- Type ---- */
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-be-vietnam), ui-sans-serif, system-ui, sans-serif;
+
+  /* ---- Shape ---- */
+  --radius-card: 24px;
+  --radius-pill: 999px;
+
+  /* ---- Elevation (navy-tinted, never gray) ---- */
+  --shadow-card: 0 1px 2px rgba(31, 58, 104, 0.04),
+    0 8px 30px rgba(31, 58, 104, 0.06);
+  --shadow-float: 0 2px 4px rgba(31, 58, 104, 0.05),
+    0 16px 48px rgba(31, 58, 104, 0.1);
+
+  /* ---- Motion ---- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-navy);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+    line-height: 1.04;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-lime);
+    color: var(--color-navy);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-navy);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+}
+
+@utility halftone {
+  background-image: radial-gradient(
+    circle at 1.5px 1.5px,
+    rgba(31, 58, 104, 0.13) 1.5px,
+    transparent 0
+  );
+  background-size: 26px 26px;
+}
+
+@utility glass-card {
+  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid color-mix(in srgb, var(--color-line) 70%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
