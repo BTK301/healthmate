@@ -53,16 +53,45 @@ async function open(width, height, mobile = false) {
 async function appShot(tabLabel, file, width = 1440, height = 900, mobile = false) {
   const page = await open(width, height, mobile);
   await page.goto(`${base}/demo`, { waitUntil: "networkidle0" });
-  await page.evaluate((p) => localStorage.setItem("healthmate.profile.v1", JSON.stringify(p)), PROFILE);
+  await page.evaluate((p) => {
+    localStorage.setItem("healthmate.profile.v1", JSON.stringify(p));
+    localStorage.removeItem("healthmate.diary.v1");
+  }, PROFILE);
   await page.reload({ waitUntil: "networkidle0" });
   await page.evaluate(() => document.fonts.ready);
   await new Promise((r) => setTimeout(r, 1400));
+
+  // log two meals so the diary feature is visible in the screenshots
+  await page.evaluate(() => {
+    const btn = [...document.querySelectorAll("button")].find(
+      (b) => b.textContent?.trim() === "Thực đơn",
+    );
+    btn?.click();
+  });
+  await new Promise((r) => setTimeout(r, 700));
+  await page.evaluate(() => {
+    const buttons = [...document.querySelectorAll("button")].filter(
+      (b) => b.textContent?.trim() === "Đã ăn",
+    );
+    buttons[0]?.click();
+    buttons[2]?.click();
+  });
+  await new Promise((r) => setTimeout(r, 600));
 
   if (tabLabel) {
     await page.evaluate((text) => {
       const btn = [...document.querySelectorAll("button")].find((b) => b.textContent?.trim() === text);
       btn?.click();
     }, tabLabel);
+    await new Promise((r) => setTimeout(r, 900));
+  } else {
+    // logging left us on the plan tab — go back to the overview
+    await page.evaluate(() => {
+      const btn = [...document.querySelectorAll("button")].find(
+        (b) => b.textContent?.trim() === "Tổng quan",
+      );
+      btn?.click();
+    });
     await new Promise((r) => setTimeout(r, 900));
   }
 

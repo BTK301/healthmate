@@ -19,22 +19,23 @@ Bản demo chạy được, đã deploy và có link công khai.
 - Engine thuần: BMR, TDEE, macro, BMI ngưỡng châu Á
 - Dữ liệu: 61 thực phẩm, 22 món, 25 thuốc, 8 bệnh nền, 17 quy tắc tương tác
 - Workspace 5 tab: Tổng quan · Thực đơn · Lịch · Cảnh báo · Hồ sơ
+- **Nhật ký ăn**: ghi món (từ thực đơn hoặc tìm tự do), trừ calo/đạm/natri realtime
 - Coach tất định + chặn câu hỏi liều thuốc / chẩn đoán / cấp cứu
 - Lưu dữ liệu bằng localStorage
 - Lighthouse: `/` 94 · `/demo` 95, a11y 100
 
 ## Việc tiếp theo (theo thứ tự ưu tiên)
 
-### 1. Nhật ký ăn — ~2h  ← làm trước
+### 1. Lịch sử cân nặng + biểu đồ — ~1,5h  ← làm tiếp
 
-Hiện app chỉ **gợi ý** thực đơn, chưa cho nhập món đã ăn nên không có
-"còn lại bao nhiêu calo" thật.
+Hiện chỉ có cân nặng hiện tại trong hồ sơ, không có lịch sử nên không thấy
+tiến độ theo thời gian.
 
 Hướng làm:
-- Thêm `src/core/diary/` với hàm thuần: thêm/xoá món, tính tổng ngày
-- Mở rộng `ProfileInput` hoặc thêm store riêng cho log theo ngày
-- Tab mới "Nhật ký" hoặc gộp vào Tổng quan
-- Tái dùng `swap`/`searchFoods` đã có trong `src/data/foods.ts`
+- Thêm `src/core/metrics/` với mảng `{ date, weightKg, waistCm? }`
+- Store riêng (giống `src/lib/diary-store.tsx`)
+- Vẽ bằng SVG thuần (không thêm recharts) để giữ bundle nhẹ
+- Đặt chart ở tab Tổng quan hoặc thêm tab "Tiến độ"
 
 ### 2. Lịch sử cân nặng + biểu đồ — ~1,5h
 

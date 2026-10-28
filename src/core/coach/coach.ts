@@ -1,5 +1,6 @@
 import type { MealPlan, NutritionTarget, ProfileInput } from "@/core/types";
 import type { ActiveRule, Constraints } from "@/core/rules/types";
+import type { DaySummary } from "@/core/diary/day";
 import { recipes } from "@/data/recipes";
 import { foods, normalize } from "@/data/foods";
 import { recipeNutrition, tagsOf } from "@/core/nutrition/macros";
@@ -12,6 +13,8 @@ export interface CoachContext {
   plan: MealPlan;
   active: ActiveRule[];
   constraints: Constraints;
+  /** today's food log, when available */
+  summary?: DaySummary;
 }
 
 export interface CoachAnswer {
@@ -155,6 +158,13 @@ export function askCoach(
 
   // ---- calories / macros -------------------------------------------------
   if (has(q, ["calo", "kcal", "năng lượng", "bao nhiêu ăn"])) {
+    const logged = ctx.summary?.totals.kcal ?? 0;
+    if (logged > 0 && ctx.summary) {
+      return {
+        text: `Hôm nay bạn đã ăn ${Math.round(logged)} kcal, còn ${Math.round(ctx.summary.remaining.kcal)} kcal trên mục tiêu ${Math.round(targets.calories)}. Đạm đã nạp ${Math.round(ctx.summary.totals.proteinG)}/${targets.proteinG} g.`,
+        chips: ["Tôi nên ăn gì bây giờ?", "Còn bao nhiêu đạm?"],
+      };
+    }
     return {
       text: `Mục tiêu hôm nay của bạn là ${Math.round(targets.calories)} kcal. Thực đơn đang gợi ý có ${Math.round(plan.total.kcal)} kcal — tức ${Math.round((plan.total.kcal / targets.calories) * 100)}% nhu cầu. Đạm ${Math.round(plan.total.proteinG)}/${targets.proteinG} g.`,
       chips: ["Tôi nên ăn gì bây giờ?", "Tại sao lại là con số này?"],

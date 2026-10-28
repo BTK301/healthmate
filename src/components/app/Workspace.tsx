@@ -22,7 +22,11 @@ import { AlertsView } from "@/components/app/views/AlertsView";
 import { ProfileView } from "@/components/app/views/ProfileView";
 import { ScheduleView } from "@/components/app/views/ScheduleView";
 import { CoachPanel } from "@/components/app/CoachPanel";
+import { AddFoodSheet } from "@/components/app/AddFoodSheet";
 import { buildSchedule } from "@/core/schedule/schedule";
+import { useDiary } from "@/lib/diary-store";
+import { loggedRecipeIds, summarize } from "@/core/diary/day";
+import type { MealPlan as Plan } from "@/core/types";
 
 type Tab = "overview" | "plan" | "schedule" | "alerts" | "profile";
 
@@ -36,8 +40,10 @@ const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
 
 export function Workspace({ profile }: { profile: ProfileInput }) {
   const { save, reset } = useProfile();
+  const { entries, add, remove } = useDiary();
   const [tab, setTab] = useState<Tab>("overview");
   const [seed, setSeed] = useState(7);
+  const [addOpen, setAddOpen] = useState(false);
 
   const targets = useMemo(() => computeTargets(profile), [profile]);
   const active = useMemo(() => evaluateRules(profile), [profile]);
@@ -64,6 +70,33 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
   const [plan, setPlan] = useState<MealPlan>(generated);
 
   useEffect(() => setPlan(generated), [generated]);
+
+  const summary = useMemo(
+    () => summarize(entries, effectiveTarget),
+    [entries, effectiveTarget],
+  );
+
+  const loggedIds = useMemo(() => loggedRecipeIds(entries), [entries]);
+
+  const handleToggleLog = (meal: Plan["meals"][number]) => {
+    const existing = entries.find(
+      (e) =>
+        e.source === "recipe" &&
+        e.sourceId === meal.recipe.id &&
+        e.slot === meal.slot,
+    );
+    if (existing) {
+      remove(existing.id);
+      return;
+    }
+    add({
+      slot: meal.slot,
+      source: "recipe",
+      sourceId: meal.recipe.id,
+      name: meal.recipe.name,
+      nutrition: meal.nutrition,
+    });
+  };
 
   const handleSwap = (slot: MealSlot) => {
     const used = new Set(plan.meals.map((m) => m.recipe.id));
@@ -118,6 +151,10 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
             targets={effectiveTarget}
             plan={plan}
             active={active}
+            summary={summary}
+            entries={entries}
+            onRemoveEntry={remove}
+            onAddFood={() => setAddOpen(true)}
             onTab={(t) => setTab(t)}
           />
         ) : null}
@@ -128,6 +165,8 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
             targets={effectiveTarget}
             onSwap={handleSwap}
             onRegenerate={() => setSeed((s) => s + 1)}
+            loggedIds={loggedIds}
+            onToggleLog={handleToggleLog}
           />
         ) : null}
 
@@ -188,7 +227,14 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
           plan,
           active,
           constraints,
+          summary,
         }}
+      />
+
+      <AddFoodSheet
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        onPick={(item) => add(item)}
       />
     </div>
   );

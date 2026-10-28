@@ -1,6 +1,7 @@
 "use client";
 
 import { ProfileProvider, useProfile } from "@/lib/profile-store";
+import { DiaryProvider } from "@/lib/diary-store";
 import { Onboarding } from "@/components/app/Onboarding";
 import { Workspace } from "@/components/app/Workspace";
 
@@ -23,7 +24,9 @@ function Gate() {
 export function DemoApp() {
   return (
     <ProfileProvider>
-      <Gate />
+      <DiaryProvider>
+        <Gate />
+      </DiaryProvider>
     </ProfileProvider>
   );
 }

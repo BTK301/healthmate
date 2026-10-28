@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, RefreshCw, Repeat2, Wallet } from "lucide-react";
+import { Check, Clock, RefreshCw, Repeat2, Wallet } from "lucide-react";
 import type { MealPlan, MealSlot, NutritionTarget } from "@/core/types";
 import { SLOT_LABEL, SLOT_WEIGHT } from "@/core/planner/plan";
 import { Bar, Card, SectionTitle } from "@/components/app/ui";
@@ -19,11 +19,15 @@ export function MealPlanView({
   targets,
   onSwap,
   onRegenerate,
+  loggedIds,
+  onToggleLog,
 }: {
   plan: MealPlan;
   targets: NutritionTarget;
   onSwap: (slot: MealSlot) => void;
   onRegenerate: () => void;
+  loggedIds: Set<string>;
+  onToggleLog: (meal: MealPlan["meals"][number]) => void;
 }) {
   const coverage = Math.round((plan.total.kcal / targets.calories) * 100);
 
@@ -100,7 +104,7 @@ export function MealPlanView({
               </p>
             ) : null}
 
-            <div className="mt-auto flex items-center justify-between border-t border-line/70 pt-2.5">
+            <div className="mt-auto flex items-center justify-between gap-2 border-t border-line/70 pt-2.5">
               <div className="flex items-center gap-3 text-[10.5px] font-medium text-muted">
                 <span className="inline-flex items-center gap-1">
                   <Clock className="h-3 w-3" /> {meal.recipe.minutes} phút
@@ -109,21 +113,43 @@ export function MealPlanView({
                   <Wallet className="h-3 w-3" /> ~{meal.recipe.priceK}k
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={() => onSwap(meal.slot)}
-                className="inline-flex items-center gap-1 rounded-pill border border-navy/12 px-2.5 py-1 text-[10.5px] font-semibold text-navy transition-colors hover:bg-canvas"
-              >
-                <Repeat2 className="h-3 w-3" />
-                Đổi món
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => onSwap(meal.slot)}
+                  className="inline-flex items-center gap-1 rounded-pill border border-navy/12 px-2.5 py-1 text-[10.5px] font-semibold text-navy transition-colors hover:bg-canvas"
+                >
+                  <Repeat2 className="h-3 w-3" />
+                  Đổi
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onToggleLog(meal)}
+                  aria-pressed={loggedIds.has(meal.recipe.id)}
+                  className={cn(
+                    "inline-flex items-center gap-1 rounded-pill border px-2.5 py-1 text-[10.5px] font-semibold transition-colors",
+                    loggedIds.has(meal.recipe.id)
+                      ? "border-good bg-good text-white"
+                      : "border-navy/20 bg-white text-navy hover:bg-canvas",
+                  )}
+                >
+                  {loggedIds.has(meal.recipe.id) ? (
+                    <>
+                      <Check className="h-3 w-3" />
+                      Đã ăn
+                    </>
+                  ) : (
+                    "Đã ăn"
+                  )}
+                </button>
+              </div>
             </div>
           </Card>
         ))}
       </div>
 
       <Card className="p-5">
-        <SectionTitle title="Tổng cả ngày" />
+        <SectionTitle title="Thực đơn cả ngày" />
         <div className="flex items-baseline gap-2">
           <span className="tabular font-display text-[30px] font-extrabold text-navy">
             {kcal(plan.total.kcal)}
