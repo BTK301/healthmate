@@ -4,7 +4,8 @@ Trợ lý sức khỏe cá nhân cho người Việt: tính nhu cầu dinh dư�
 hằng ngày, lịch sinh hoạt theo nghề nghiệp và cảnh báo ràng buộc ăn uống dựa trên
 thuốc đang dùng.
 
-**[→ Mở bản demo](https://healthmate.example.com/demo)** · không cần đăng ký
+**Chạy local:** `npm install && npm run dev` → mở `/demo`. Không cần đăng ký,
+không cần API key, dữ liệu lưu bằng `localStorage`.
 
 ![Landing](docs/screenshots/01-landing.png)
 
