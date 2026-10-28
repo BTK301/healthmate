@@ -7,6 +7,8 @@ thuốc đang dùng.
 **Chạy local:** `npm install && npm run dev` → mở `/demo`. Không cần đăng ký,
 không cần API key, dữ liệu lưu bằng `localStorage`.
 
+### [🔗 Live demo](https://healthmate-theta.vercel.app/demo) · [Trang giới thiệu](https://healthmate-theta.vercel.app/)
+
 ![Landing](docs/screenshots/01-landing.png)
 
 > Dự án portfolio. Đây là công cụ tham khảo giáo dục, không phải dịch vụ khám
