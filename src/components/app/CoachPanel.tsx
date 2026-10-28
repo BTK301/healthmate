@@ -47,10 +47,12 @@ export function CoachPanel({ ctx }: { ctx: CoachContext }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed right-4 bottom-24 z-40 inline-flex h-12 items-center gap-2 rounded-pill bg-navy px-4 text-[12.5px] font-semibold text-white shadow-float transition-transform hover:-translate-y-0.5 sm:right-6 sm:bottom-6"
+        className="fixed right-4 bottom-24 z-40 inline-flex h-12 w-12 items-center justify-center gap-2 rounded-pill bg-navy text-white shadow-float transition-transform hover:-translate-y-0.5 sm:right-6 sm:bottom-6 sm:w-auto sm:px-4"
       >
-        <Sparkles className="h-4 w-4" />
-        Hỏi HealthMate
+        <Sparkles className="h-4 w-4 shrink-0" />
+        <span className="hidden text-[12.5px] font-semibold sm:inline">
+          Hỏi HealthMate
+        </span>
       </button>
 
       <AnimatePresence>
