@@ -20,22 +20,25 @@ Bản demo chạy được, đã deploy và có link công khai.
 - Dữ liệu: 61 thực phẩm, 22 món, 25 thuốc, 8 bệnh nền, 17 quy tắc tương tác
 - Workspace 5 tab: Tổng quan · Thực đơn · Lịch · Cảnh báo · Hồ sơ
 - **Nhật ký ăn**: ghi món (từ thực đơn hoặc tìm tự do), trừ calo/đạm/natri realtime
+- **Tiến độ cân nặng**: lịch sử theo ngày + biểu đồ SVG, kg/tuần, BMI
 - Coach tất định + chặn câu hỏi liều thuốc / chẩn đoán / cấp cứu
 - Lưu dữ liệu bằng localStorage
 - Lighthouse: `/` 94 · `/demo` 95, a11y 100
 
 ## Việc tiếp theo (theo thứ tự ưu tiên)
 
-### 1. Lịch sử cân nặng + biểu đồ — ~1,5h  ← làm tiếp
+### 1. Nối LLM thật cho coach — ~1,5h (cần API key)  ← làm tiếp
 
-Hiện chỉ có cân nặng hiện tại trong hồ sơ, không có lịch sử nên không thấy
-tiến độ theo thời gian.
+Coach hiện là rule-based: trả lời đúng số liệu nhưng câu chữ máy móc và không
+hiểu câu hỏi lạ.
 
 Hướng làm:
-- Thêm `src/core/metrics/` với mảng `{ date, weightKg, waistCm? }`
-- Store riêng (giống `src/lib/diary-store.tsx`)
-- Vẽ bằng SVG thuần (không thêm recharts) để giữ bundle nhẹ
-- Đặt chart ở tab Tổng quan hoặc thêm tab "Tiến độ"
+- Thay phần thân `askCoach` trong `src/core/coach/coach.ts`
+- Giữ nguyên interface `CoachAnswer` và các chốt chặn an toàn (red flag, refusal)
+- Key đặt trong `.env.local`, gọi qua API route để không lộ key
+- LLM chỉ diễn giải dữ liệu engine đưa vào, không tự tính
+
+### 2. Video 90 giây — ~30 phút
 
 ### 2. Lịch sử cân nặng + biểu đồ — ~1,5h
 

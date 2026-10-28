@@ -9,6 +9,8 @@ import type { DiaryEntry } from "@/core/diary/types";
 import { SLOT_LABEL } from "@/core/planner/plan";
 import { BMI_LABEL, goalLabel } from "@/core/nutrition/targets";
 import { Card, Bar, SeverityPill, SectionTitle } from "@/components/app/ui";
+import { WeightCard } from "@/components/app/WeightCard";
+import { useMetrics } from "@/lib/metrics-store";
 import { kcal, nf } from "@/lib/format";
 
 const HealthOrb = dynamic(() => import("@/components/three/HealthOrb"), {
@@ -38,6 +40,7 @@ export function Dashboard({
 }) {
   const hasLog = entries.length > 0;
   const headline = hasLog ? summary.remaining.kcal : targets.calories;
+  const { entries: weights, add: addWeight, clearSamples } = useMetrics();
 
   const macros = [
     {
@@ -195,8 +198,10 @@ export function Dashboard({
 
           {entries.length === 0 ? (
             <div className="rounded-2xl bg-canvas/60 px-4 py-7 text-center">
-              <Utensils className="mx-auto h-5 w-5 text-navy/40" />
-              <p className="mt-2 text-[12px] font-medium text-muted">
+              <span className="mx-auto grid h-9 w-9 place-items-center rounded-full bg-white text-navy/45">
+                <Utensils className="h-4 w-4" strokeWidth={2} />
+              </span>
+              <p className="mt-2.5 text-[12px] font-medium text-muted">
                 Chưa ghi món nào hôm nay.
               </p>
               <p className="mt-1 text-[11px] text-muted/80">
@@ -270,8 +275,10 @@ export function Dashboard({
           />
           {active.length === 0 ? (
             <div className="rounded-2xl bg-canvas/60 px-4 py-6 text-center">
-              <Sparkles className="mx-auto h-5 w-5 text-good" />
-              <p className="mt-2 text-[12px] font-medium text-muted">
+              <span className="mx-auto grid h-8 w-8 place-items-center rounded-full bg-white">
+                <Sparkles className="h-4 w-4 text-good" />
+              </span>
+              <p className="mt-2.5 text-[12px] font-medium text-muted">
                 Chưa có ràng buộc nào. Thêm thuốc hoặc bệnh nền để nhận cảnh
                 báo.
               </p>
@@ -304,6 +311,13 @@ export function Dashboard({
           )}
         </Card>
       </div>
+
+      <WeightCard
+        entries={weights}
+        heightCm={profile.heightCm}
+        onAdd={addWeight}
+        onClearSamples={clearSamples}
+      />
     </div>
   );
 }

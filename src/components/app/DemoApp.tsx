@@ -2,6 +2,7 @@
 
 import { ProfileProvider, useProfile } from "@/lib/profile-store";
 import { DiaryProvider } from "@/lib/diary-store";
+import { MetricsProvider } from "@/lib/metrics-store";
 import { Onboarding } from "@/components/app/Onboarding";
 import { Workspace } from "@/components/app/Workspace";
 
@@ -18,7 +19,11 @@ function Gate() {
 
   if (!profile) return <Onboarding onDone={save} />;
 
-  return <Workspace profile={profile} />;
+  return (
+    <MetricsProvider seedWeight={profile.weightKg}>
+      <Workspace profile={profile} />
+    </MetricsProvider>
+  );
 }
 
 export function DemoApp() {

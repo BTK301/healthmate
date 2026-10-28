@@ -43,6 +43,8 @@ interface.
   đồng thời calo và đạm, đổi món vẫn giữ mục tiêu.
 - **Nhật ký ăn** — ghi món đã ăn (từ thực đơn hoặc tìm tự do), trừ dần vào mục
   tiêu, hiện calo/đạm/natri còn lại theo thời gian thực.
+- **Tiến độ cân nặng** — lưu theo ngày, biểu đồ SVG thuần (không thư viện), tốc
+  độ thay đổi kg/tuần và BMI cập nhật theo lần ghi mới nhất.
 - **Thuốc & bệnh nền** — 25 hoạt chất, 8 bệnh nền, 17 quy tắc tương tác có mức
   bằng chứng và trích dẫn. Engine tự siết natri, chặn rượu bia, đổi gợi ý vận động.
 - **Lịch sinh hoạt** — timeline hợp nhất giờ uống thuốc, bữa ăn và vận động theo
