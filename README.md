@@ -51,6 +51,8 @@ interface.
   nghề (văn phòng / ca đêm / lao động chân tay).
 - **Coach** — trả lời dựa trên engine, chặn câu hỏi về liều thuốc, chẩn đoán và
   dấu hiệu cấp cứu.
+- **Cài được lên điện thoại** — PWA có manifest, icon maskable và service worker
+  nên mở full-screen và chạy offline sau lần truy cập đầu.
 
 ## Ảnh
 
