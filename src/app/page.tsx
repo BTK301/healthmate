@@ -12,7 +12,7 @@ import {
   Sparkles,
   Utensils,
 } from "lucide-react";
-import { BrandCorner, LogoLockup, LogoMark } from "@/components/brand/Logo";
+import { LogoLockup } from "@/components/brand/Logo";
 import { HeroOrb } from "@/components/landing/HeroOrb";
 import { Reveal } from "@/components/landing/Reveal";
 import { cn } from "@/lib/cn";
@@ -23,9 +23,7 @@ function Nav() {
   return (
     <header className="sticky top-0 z-40">
       <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-4 px-5 py-4">
-        <div className="glass-card flex items-center rounded-pill px-4 py-2.5">
-          <LogoLockup />
-        </div>
+        <LogoLockup className="text-[18px]" />
         <nav className="hidden items-center gap-7 md:flex">
           <a
             href="#features"
@@ -375,7 +373,6 @@ function Footer() {
           </p>
         </div>
         <div className="flex items-center gap-2 text-[11.5px] font-medium text-muted">
-          <LogoMark className="h-5 w-5 text-navy/40" />
           <span>Next.js · TypeScript · Three.js</span>
         </div>
       </div>
@@ -412,7 +409,6 @@ export default function LandingPage() {
         <HowItWorks />
       </main>
       <Footer />
-      <BrandCorner className="hidden sm:block" />
     </div>
   );
 }

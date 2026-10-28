@@ -15,7 +15,7 @@ import {
   OCCUPATION_LABEL,
   goalLabel,
 } from "@/core/nutrition/targets";
-import { LogoLockup, LogoMark } from "@/components/brand/Logo";
+import { LogoLockup } from "@/components/brand/Logo";
 import { DEFAULT_PROFILE } from "@/lib/profile-store";
 import { cn } from "@/lib/cn";
 
@@ -297,7 +297,6 @@ export function Onboarding({
           </button>
         ) : (
           <span className="text-[12px] text-muted">
-            <LogoMark className="mr-1 inline h-3.5 w-3.5 align-[-2px] text-good" />
             Không cần đăng ký
           </span>
         )}

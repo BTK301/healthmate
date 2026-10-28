@@ -13,7 +13,7 @@ import type { MealPlan, MealSlot, ProfileInput } from "@/core/types";
 import { buildPlan, swapMeal } from "@/core/planner/plan";
 import { computeTargets } from "@/core/nutrition/targets";
 import { buildConstraints, evaluateRules } from "@/core/rules/engine";
-import { LogoLockup, BrandCorner } from "@/components/brand/Logo";
+import { LogoLockup } from "@/components/brand/Logo";
 import { useProfile } from "@/lib/profile-store";
 import { cn } from "@/lib/cn";
 import { Dashboard } from "@/components/app/views/Dashboard";
@@ -180,8 +180,6 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
           ))}
         </div>
       </nav>
-
-      <BrandCorner className="hidden sm:block" />
 
       <CoachPanel
         ctx={{
