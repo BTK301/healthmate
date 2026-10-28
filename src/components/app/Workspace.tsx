@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
+  CalendarClock,
   LayoutDashboard,
   ShieldAlert,
   UserRound,
@@ -19,12 +20,16 @@ import { Dashboard } from "@/components/app/views/Dashboard";
 import { MealPlanView } from "@/components/app/views/MealPlanView";
 import { AlertsView } from "@/components/app/views/AlertsView";
 import { ProfileView } from "@/components/app/views/ProfileView";
+import { ScheduleView } from "@/components/app/views/ScheduleView";
+import { CoachPanel } from "@/components/app/CoachPanel";
+import { buildSchedule } from "@/core/schedule/schedule";
 
-type Tab = "overview" | "plan" | "alerts" | "profile";
+type Tab = "overview" | "plan" | "schedule" | "alerts" | "profile";
 
 const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "overview", label: "Tổng quan", icon: LayoutDashboard },
   { id: "plan", label: "Thực đơn", icon: UtensilsCrossed },
+  { id: "schedule", label: "Lịch", icon: CalendarClock },
   { id: "alerts", label: "Cảnh báo", icon: ShieldAlert },
   { id: "profile", label: "Hồ sơ", icon: UserRound },
 ];
@@ -130,6 +135,18 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
           <AlertsView active={active} constraints={constraints} />
         ) : null}
 
+        {tab === "schedule" ? (
+          <ScheduleView
+            items={buildSchedule({
+              profile,
+              plan,
+              active,
+              targets: effectiveTarget,
+            })}
+            profile={profile}
+          />
+        ) : null}
+
         {tab === "profile" ? (
           <ProfileView
             profile={profile}
@@ -143,9 +160,9 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
       {/* mobile dock */}
       <nav
         aria-label="Điều hướng di động"
-        className="fixed inset-x-3 bottom-3 z-40 sm:hidden"
+        className="fixed inset-x-3 bottom-3 z-30 sm:hidden"
       >
-        <div className="flex items-center justify-between rounded-[22px] border border-white/80 bg-white/90 px-1.5 py-1.5 shadow-float backdrop-blur-md">
+        <div className="flex items-center justify-between rounded-[22px] border border-white/80 bg-white/90 px-1 py-1.5 shadow-float backdrop-blur-md">
           {TABS.map((t) => (
             <button
               key={t.id}
@@ -153,7 +170,7 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
               onClick={() => setTab(t.id)}
               aria-current={tab === t.id}
               className={cn(
-                "flex flex-1 flex-col items-center gap-1 rounded-[16px] py-1.5 text-[9.5px] font-semibold transition-colors",
+                "flex flex-1 flex-col items-center gap-1 rounded-[15px] py-1.5 text-[9px] font-semibold transition-colors",
                 tab === t.id ? "bg-navy text-white" : "text-muted",
               )}
             >
@@ -163,6 +180,16 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
           ))}
         </div>
       </nav>
+
+      <CoachPanel
+        ctx={{
+          profile,
+          targets: effectiveTarget,
+          plan,
+          active,
+          constraints,
+        }}
+      />
     </div>
   );
 }

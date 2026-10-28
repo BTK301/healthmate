@@ -18,10 +18,11 @@ const PROFILE = {
   allergies: [],
 };
 
-const tabs = ["overview", "plan", "alerts", "profile"];
+const tabs = ["overview", "plan", "schedule", "alerts", "profile"];
 const labels = {
   overview: "Tổng quan",
   plan: "Thực đơn",
+  schedule: "Lịch",
   alerts: "Cảnh báo",
   profile: "Hồ sơ",
 };
@@ -70,7 +71,6 @@ async function shoot(label, width, height) {
 
   await page.close();
 }
-
 await shoot("app-desktop", 1440, 960);
 await shoot("app-mobile", 390, 844);
 
