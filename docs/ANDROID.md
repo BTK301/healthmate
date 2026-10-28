@@ -3,37 +3,34 @@
 App chạy dưới dạng **Trusted Web Activity** — một APK mở đúng web app đã deploy
 trong khung toàn màn hình. Không cần Android SDK trên máy.
 
-## 1. Tạo gói bằng PWABuilder
+## 1. Tạo gói bằng PWABuilder — đã làm
 
-1. Mở <https://www.pwabuilder.com>
-2. Dán `https://healthmate-theta.vercel.app` → **Start**
-3. **Package for stores** → **Android**
-4. Cấu hình:
-   - Package ID: `com.btk301.healthmate`
-   - App name: `HealthMate`
-   - Signing key: **Create new** (tải về và giữ file `.keystore` + mật khẩu)
-5. **Download** → nhận file zip gồm:
-   - `*.apk` — cài trực tiếp
-   - `*.aab` — nếu đưa lên Google Play
-   - `assetlinks.json` — dùng cho bước 2
-   - `signing.keystore`, `signing-key-info.txt` — **giữ kỹ, mất là không update được**
+Bản APK/AAB đã được tạo bằng PWABuilder với cấu hình:
 
-## 2. Xác thực domain (để mất thanh địa chỉ)
+| | |
+|---|---|
+| Package ID | `app.vercel.healthmate_theta.twa` (PWABuilder tự sinh từ URL) |
+| App name | HealthMate |
+| Ký bằng | `signing.keystore` (alias `my-key-alias`) |
+| SHA-256 | `A6:9D:11:07:…:B3:2C` |
 
-Android chỉ ẩn thanh địa chỉ khi domain chứng minh được quyền với package.
+File gốc nằm ngoài repo tại `C:\Users\Admin\Projects\healthmate-android\`:
+`HealthMate.apk`, `HealthMate.aab`, `assetlinks.json`, `signing.keystore`,
+`signing-key-info.txt`.
 
-Lấy `assetlinks.json` trong zip và đặt nội dung của nó vào biến môi trường
-`ANDROID_ASSETLINKS` trên Vercel (Settings → Environment Variables), rồi redeploy.
+> **Sao lưu `signing.keystore` + mật khẩu ngay.** Mất là không update được app
+> nữa, phải gỡ rồi cài lại với package id khác.
 
-Kiểm tra:
+## 2. Xác thực domain — đã làm
+
+`assetlinks.json` đã được nạp vào biến môi trường `ANDROID_ASSETLINKS` trên
+Vercel (Production) và redeploy. Kiểm tra:
 
 ```bash
 curl -s https://healthmate-theta.vercel.app/.well-known/assetlinks.json
 ```
 
-Phải trả về đúng mảng JSON, không phải `[]`.
-
-> Không có bước này app vẫn chạy, chỉ là hiện thanh địa chỉ Chrome ở trên.
+Phải trả về mảng JSON chứa `package_name` và fingerprint ở trên.
 
 ## 3. Cài lên điện thoại
 
