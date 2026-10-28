@@ -16,7 +16,7 @@ import {
   Sparkles,
   Utensils,
 } from "lucide-react";
-import { LogoLockup, LogoMark } from "@/components/brand/Logo";
+import { LogoLockup, LogoMark, BrandCorner } from "@/components/brand/Logo";
 import { cn } from "@/lib/cn";
 
 const HealthOrb = dynamic(() => import("@/components/three/HealthOrb"), {
@@ -458,7 +458,7 @@ function Footer() {
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-dvh overflow-x-clip">
+    <div id="top" className="relative min-h-dvh overflow-x-clip">
       {/* atmosphere */}
       <div
         aria-hidden
@@ -486,6 +486,7 @@ export default function LandingPage() {
         <HowItWorks />
       </main>
       <Footer />
+      <BrandCorner className="hidden sm:block" />
     </div>
   );
 }
