@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Camera, Check, Loader2, ScanLine, X } from "lucide-react";
 import type { MedicationPlan } from "@/core/meds/types";
 import { drugs } from "@/data/drugs";
+import { classInfoFor } from "@/data/drugClasses";
 import { normalize } from "@/data/foods";
 import { TIME_PRESETS } from "@/core/meds/types";
 import { cn } from "@/lib/cn";
@@ -236,49 +237,76 @@ export function ScanSheet({
 
               {items.length > 0 ? (
                 <ul className="space-y-1.5">
-                  {items.map((it, idx) => (
-                    <li key={`${it.name}-${idx}`}>
-                      <button
-                        type="button"
-                        disabled={!it.drugId}
-                        onClick={() =>
-                          setItems((prev) =>
-                            prev.map((x, i) =>
-                              i === idx ? { ...x, selected: !x.selected } : x,
-                            ),
-                          )
-                        }
+                  {items.map((it, idx) => {
+                    const drug = drugs.find((d) => d.id === it.drugId);
+                    const info = drug ? classInfoFor(drug.classes)[0] : undefined;
+                    return (
+                      <li
+                        key={`${it.name}-${idx}`}
                         className={cn(
-                          "flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors",
+                          "overflow-hidden rounded-xl border transition-colors",
                           it.selected
-                            ? "border-good/30 bg-good-soft/50"
+                            ? "border-good/30 bg-good-soft/40"
                             : "border-line bg-white",
-                          !it.drugId && "opacity-60",
+                          !it.drugId && "opacity-70",
                         )}
                       >
-                        <span
-                          className={cn(
-                            "grid h-5 w-5 shrink-0 place-items-center rounded-md border",
-                            it.selected
-                              ? "border-good bg-good text-white"
-                              : "border-line bg-white text-transparent",
-                          )}
-                        >
-                          <Check className="h-3 w-3" strokeWidth={3} />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-[12.5px] font-semibold text-navy">
-                            {it.name}
-                          </span>
-                          <span className="block text-[10.5px] text-muted">
-                            {it.drugId
-                              ? `${it.dose} · ${it.timesPerDay} lần/ngày`
-                              : "Chưa có trong danh mục — thêm tay"}
-                          </span>
-                        </span>
-                      </button>
-                    </li>
-                  ))}
+                        <div className="flex items-center gap-3 px-3 py-2.5">
+                          <button
+                            type="button"
+                            disabled={!it.drugId}
+                            aria-label={`Chọn ${it.name}`}
+                            aria-pressed={it.selected}
+                            onClick={() =>
+                              setItems((prev) =>
+                                prev.map((x, i) =>
+                                  i === idx ? { ...x, selected: !x.selected } : x,
+                                ),
+                              )
+                            }
+                            className={cn(
+                              "grid h-5 w-5 shrink-0 place-items-center rounded-md border transition-colors",
+                              it.selected
+                                ? "border-good bg-good text-white"
+                                : "border-line bg-white text-transparent",
+                            )}
+                          >
+                            <Check className="h-3 w-3" strokeWidth={3} />
+                          </button>
+
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-[12.5px] font-semibold text-navy">
+                              {it.name}
+                            </p>
+                            <p className="text-[10.5px] text-muted">
+                              {it.drugId
+                                ? `${it.dose} · ${it.timesPerDay} lần/ngày`
+                                : "Chưa có trong danh mục — thêm tay"}
+                            </p>
+                          </div>
+                        </div>
+
+                        {info ? (
+                          <div className="border-t border-line/60 bg-white/60 px-3 py-2">
+                            <p className="text-[10.5px] leading-snug text-navy/80">
+                              <b className="font-semibold">{info.label}</b> ·{" "}
+                              {info.usedFor}
+                            </p>
+                            <p className="mt-0.5 text-[10px] leading-snug text-muted">
+                              {info.note}
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="border-t border-line/60 bg-white/60 px-3 py-2">
+                            <p className="text-[10px] leading-snug text-muted">
+                              Chưa có thông tin cho thuốc này. App không tự suy
+                              đoán — hãy hỏi dược sĩ.
+                            </p>
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               ) : null}
             </div>
@@ -301,8 +329,9 @@ export function ScanSheet({
             Thêm {selected.length > 0 ? selected.length : ""} thuốc vào lịch
           </button>
           <p className="mt-2 text-center text-[9.5px] leading-snug text-muted">
-            Ảnh chỉ dùng để đọc tên thuốc, không lưu lại. Luôn kiểm tra lại với
-            đơn giấy trước khi dùng.
+            Ảnh chỉ dùng để đọc tên thuốc, không lưu lại. Thông tin thuốc là mô tả
+            chung theo nhóm, không thay thế tờ hướng dẫn sử dụng — luôn kiểm tra
+            lại với đơn giấy.
           </p>
         </div>
       </div>

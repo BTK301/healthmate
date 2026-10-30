@@ -12,6 +12,7 @@ import {
   prettyTime,
 } from "@/core/meds/schedule";
 import { drugById } from "@/data/drugs";
+import { classInfoFor } from "@/data/drugClasses";
 import { Card, Bar, SeverityPill, SectionTitle } from "@/components/app/ui";
 import { AddMedicationSheet, TrashButton } from "@/components/app/AddMedicationSheet";
 import { ScanSheet } from "@/components/app/ScanSheet";
@@ -253,6 +254,12 @@ export function MedsView({
                       <p className="text-[13px] font-bold text-navy">
                         {drug?.name ?? "Thuốc"}
                       </p>
+                      {drug ? (
+                        <p className="mt-0.5 text-[10.5px] text-navy/70">
+                          {classInfoFor(drug.classes)[0]?.label} ·{" "}
+                          {classInfoFor(drug.classes)[0]?.usedFor}
+                        </p>
+                      ) : null}
                       <p className="mt-0.5 text-[10.5px] text-muted">
                         {plan.doseText} · {FOOD_LABEL[plan.foodTiming]} ·{" "}
                         {plan.endDate ? `đến ${plan.endDate}` : "dài hạn"}
