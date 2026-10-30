@@ -15,37 +15,29 @@ Bản demo chạy được, đã deploy và có link công khai.
 
 ## Đã xong
 
-- Định vị lại thành **quản lý bệnh mạn tính** (landing, metadata, manifest)
+- Định vị **quản lý bệnh mạn tính**: liều thuốc là trung tâm, không phải calo
 - **Lịch uống thuốc**: thêm thuốc + giờ, đánh dấu đã uống, tuân thủ 7 ngày, chuỗi ngày
-- **Quét đơn thuốc** bằng ảnh (vision model, có fallback khi chưa có key)
+- **Quét đơn thuốc** bằng ảnh, kèm thông tin nhóm thuốc cho thuốc nhận diện được
+- Gộp cảnh báo vào tab **Điều trị** (Lịch uống · Tương tác) — 4 tab thay vì 5
 - Engine thuần: BMR, TDEE, macro, BMI ngưỡng châu Á
-- Dữ liệu: 61 thực phẩm, 22 món, 25 thuốc, 8 bệnh nền, 17 quy tắc tương tác
-- Workspace 5 tab: Tổng quan · Thuốc · Thực đơn · Cảnh báo · Hồ sơ
 - Nhật ký ăn + tiến độ cân nặng (biểu đồ SVG)
 - Coach tất định + chặn câu hỏi liều thuốc / chẩn đoán / cấp cứu
 - PWA cài được + offline; APK Android (TWA) đã build và xác thực domain
 
 ## Việc tiếp theo (theo thứ tự ưu tiên)
 
-### 1. Nhắc nhở thực sự (Web Push) — ~1 ngày  ← quan trọng nhất
-
-Hiện lịch uống chỉ hiện khi mở app. Người bệnh mạn tính cần **thông báo đúng giờ**
-kể cả khi không mở app.
-
-Hướng làm:
-- Đăng ký Push API + VAPID keys (`web-push` package)
-- Service worker sẵn có trong `public/sw.js` — thêm handler `push`
-- Lưu subscription vào localStorage cho demo, hoặc DB khi có tài khoản
-- Vercel Cron (1 phút/lần) quét `meds` đến giờ và gửi push
-
-### 2. Chỉ số theo bệnh nền — ~2 ngày
+### 1. Chỉ số theo bệnh nền — ~2 ngày  ← làm tiếp
 
 Huyết áp (tăng huyết áp), đường huyết (tiểu đường), acid uric (gout), eGFR (suy thận).
 Mỗi bệnh có ngưỡng cảnh báo riêng và biểu đồ riêng.
 
-### 3. Nhật ký nhiều ngày — ~1 ngày
+### 2. Nhắc nhở thực sự (Web Push) — ~1 ngày
 
-Hiện chỉ xem được hôm nay. Cần lịch sử tuần/tháng cho cả bữa ăn và liều thuốc.
+Hiện lịch uống chỉ hiện khi mở app. Cần thông báo đúng giờ kể cả khi không mở.
+
+### 3. Báo cáo PDF cho bác sĩ — ~1 ngày
+
+Một trang A4: tuân thủ 2 tuần, chỉ số, thuốc đang dùng.
 
 ### 4. Bật API key — ~15 phút
 

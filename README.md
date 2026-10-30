@@ -34,6 +34,17 @@ giữ độ chính xác của engine và sự tự nhiên của ngôn ngữ. Coa
 tất định, chạy được mà không cần API key; lớp gọi model thật nằm sau cùng một
 interface.
 
+## Cấu trúc app
+
+Bốn tab, một việc chính mỗi tab:
+
+| Tab | Nội dung |
+|---|---|
+| **Hôm nay** | Liều thuốc kế tiếp + các liều còn lại, tuân thủ 7 ngày, bữa ăn, cảnh báo, cân nặng |
+| **Điều trị** | *Lịch uống* (thêm/quét đơn, đánh dấu đã uống) và *Tương tác* (ràng buộc kèm bằng chứng) |
+| **Bữa ăn** | Thực đơn gợi ý theo bệnh nền, nhật ký ăn, tổng ngày |
+| **Hồ sơ** | Chỉ số cơ thể, bệnh nền, kết quả tính |
+
 ## Tính năng
 
 - **Tính nhu cầu** — Mifflin–St Jeor, hệ số vận động + nghề nghiệp, ngưỡng BMI
@@ -60,17 +71,17 @@ interface.
 
 ## Ảnh
 
-| Tổng quan | Thực đơn |
+| Hôm nay | Điều trị |
 |---|---|
-| ![](docs/screenshots/02-overview.png) | ![](docs/screenshots/03-meal-plan.png) |
+| ![](docs/screenshots/02-overview.png) | ![](docs/screenshots/04-treatment.png) |
 
-| Cảnh báo thuốc | Coach |
+| Tương tác thuốc | Coach |
 |---|---|
-| ![](docs/screenshots/04-alerts.png) | ![](docs/screenshots/07-coach.png) |
+| ![](docs/screenshots/05-interactions.png) | ![](docs/screenshots/07-coach.png) |
 
-| Lịch sinh hoạt | Di động |
+| Bữa ăn | Di động |
 |---|---|
-| ![](docs/screenshots/05-meds.png) | ![](docs/screenshots/06-mobile.png) |
+| ![](docs/screenshots/03-meals.png) | ![](docs/screenshots/06-mobile.png) |
 
 ## Chất lượng
 

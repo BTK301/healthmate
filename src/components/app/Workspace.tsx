@@ -2,13 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import {
-  LayoutDashboard,
-  Pill,
-  ShieldAlert,
-  UserRound,
-  UtensilsCrossed,
-} from "lucide-react";
+import { LayoutDashboard, Pill, UserRound, UtensilsCrossed } from "lucide-react";
 import type { MealPlan, MealSlot, ProfileInput } from "@/core/types";
 import { buildPlan, swapMeal } from "@/core/planner/plan";
 import { computeTargets } from "@/core/nutrition/targets";
@@ -22,20 +16,18 @@ import { loggedRecipeIds, summarize } from "@/core/diary/day";
 import { cn } from "@/lib/cn";
 import { Dashboard } from "@/components/app/views/Dashboard";
 import { MealPlanView } from "@/components/app/views/MealPlanView";
-import { AlertsView } from "@/components/app/views/AlertsView";
 import { ProfileView } from "@/components/app/views/ProfileView";
-import { MedsView } from "@/components/app/views/MedsView";
+import { TreatmentView, type TreatmentTab } from "@/components/app/views/TreatmentView";
 import { RoutineCard } from "@/components/app/RoutineCard";
 import { CoachPanel } from "@/components/app/CoachPanel";
 import { AddFoodSheet } from "@/components/app/AddFoodSheet";
 
-type Tab = "overview" | "meds" | "plan" | "alerts" | "profile";
+type Tab = "overview" | "treatment" | "meals" | "profile";
 
 const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
-  { id: "overview", label: "Tổng quan", icon: LayoutDashboard },
-  { id: "meds", label: "Thuốc", icon: Pill },
-  { id: "plan", label: "Thực đơn", icon: UtensilsCrossed },
-  { id: "alerts", label: "Cảnh báo", icon: ShieldAlert },
+  { id: "overview", label: "Hôm nay", icon: LayoutDashboard },
+  { id: "treatment", label: "Điều trị", icon: Pill },
+  { id: "meals", label: "Bữa ăn", icon: UtensilsCrossed },
   { id: "profile", label: "Hồ sơ", icon: UserRound },
 ];
 
@@ -46,6 +38,7 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
     useMeds();
 
   const [tab, setTab] = useState<Tab>("overview");
+  const [treatmentTab, setTreatmentTab] = useState<TreatmentTab>("schedule");
   const [seed, setSeed] = useState(7);
   const [addOpen, setAddOpen] = useState(false);
 
@@ -93,6 +86,11 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
     () => buildSchedule({ profile, plan, active, targets: effectiveTarget }),
     [profile, plan, active, effectiveTarget],
   );
+
+  const openTreatment = (sub: TreatmentTab) => {
+    setTreatmentTab(sub);
+    setTab("treatment");
+  };
 
   const handleSwap = (slot: MealSlot) => {
     const used = new Set(plan.meals.map((m) => m.recipe.id));
@@ -172,25 +170,29 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
               entries={entries}
               onRemoveEntry={remove}
               onAddFood={() => setAddOpen(true)}
-              onTab={(t) => setTab(t === "alerts" ? "alerts" : "plan")}
+              onOpenTreatment={openTreatment}
+              onOpenMeals={() => setTab("meals")}
             />
             <RoutineCard items={routine} />
           </div>
         ) : null}
 
-        {tab === "meds" ? (
-          <MedsView
+        {tab === "treatment" ? (
+          <TreatmentView
+            key={treatmentTab}
+            initialTab={treatmentTab}
             plans={plans}
             logs={logs}
             today={today}
             active={active}
+            constraints={constraints}
             onToggle={toggleDose}
             onRemove={removePlan}
             onAdd={addPlan}
           />
         ) : null}
 
-        {tab === "plan" ? (
+        {tab === "meals" ? (
           <MealPlanView
             plan={plan}
             targets={effectiveTarget}
@@ -199,10 +201,6 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
             loggedIds={loggedIds}
             onToggleLog={handleToggleLog}
           />
-        ) : null}
-
-        {tab === "alerts" ? (
-          <AlertsView active={active} constraints={constraints} />
         ) : null}
 
         {tab === "profile" ? (
