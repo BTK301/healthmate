@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Camera, Check, Loader2, ScanLine, X } from "lucide-react";
+import { Camera, Check, ExternalLink, Loader2, ScanLine, X } from "lucide-react";
 import type { MedicationPlan } from "@/core/meds/types";
 import { drugs } from "@/data/drugs";
 import { classInfoFor } from "@/data/drugClasses";
@@ -302,6 +302,17 @@ export function ScanSheet({
                               Chưa có thông tin cho thuốc này. App không tự suy
                               đoán — hãy hỏi dược sĩ.
                             </p>
+                            <a
+                              href={`https://www.google.com/search?q=${encodeURIComponent(
+                                `${it.name} hoạt chất công dụng`,
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-navy underline decoration-navy/25 underline-offset-2 hover:decoration-navy"
+                            >
+                              Tra cứu trên Google
+                              <ExternalLink className="h-2.5 w-2.5" />
+                            </a>
                           </div>
                         )}
                       </li>
