@@ -3,6 +3,7 @@
 import { ProfileProvider, useProfile } from "@/lib/profile-store";
 import { DiaryProvider } from "@/lib/diary-store";
 import { MetricsProvider } from "@/lib/metrics-store";
+import { MedsProvider } from "@/lib/meds-store";
 import { Onboarding } from "@/components/app/Onboarding";
 import { Workspace } from "@/components/app/Workspace";
 
@@ -21,7 +22,9 @@ function Gate() {
 
   return (
     <MetricsProvider seedWeight={profile.weightKg}>
-      <Workspace profile={profile} />
+      <MedsProvider seedDrugIds={profile.drugIds}>
+        <Workspace profile={profile} />
+      </MedsProvider>
     </MetricsProvider>
   );
 }

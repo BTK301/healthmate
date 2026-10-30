@@ -103,7 +103,7 @@ async function appShot(tabLabel, file, width = 1440, height = 900, mobile = fals
 await appShot(null, "02-overview.png");
 await appShot("Thực đơn", "03-meal-plan.png");
 await appShot("Cảnh báo", "04-alerts.png");
-await appShot("Lịch", "05-schedule.png");
+await appShot("Thuốc", "05-meds.png");
 await appShot(null, "06-mobile.png", 390, 844, true);
 
 // coach

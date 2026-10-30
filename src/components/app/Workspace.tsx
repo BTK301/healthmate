@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
-  CalendarClock,
   LayoutDashboard,
+  Pill,
   ShieldAlert,
   UserRound,
   UtensilsCrossed,
@@ -13,27 +13,28 @@ import type { MealPlan, MealSlot, ProfileInput } from "@/core/types";
 import { buildPlan, swapMeal } from "@/core/planner/plan";
 import { computeTargets } from "@/core/nutrition/targets";
 import { buildConstraints, evaluateRules } from "@/core/rules/engine";
+import { buildSchedule } from "@/core/schedule/schedule";
 import { LogoLockup } from "@/components/brand/Logo";
 import { useProfile } from "@/lib/profile-store";
+import { useDiary } from "@/lib/diary-store";
+import { useMeds } from "@/lib/meds-store";
+import { loggedRecipeIds, summarize } from "@/core/diary/day";
 import { cn } from "@/lib/cn";
 import { Dashboard } from "@/components/app/views/Dashboard";
 import { MealPlanView } from "@/components/app/views/MealPlanView";
 import { AlertsView } from "@/components/app/views/AlertsView";
 import { ProfileView } from "@/components/app/views/ProfileView";
-import { ScheduleView } from "@/components/app/views/ScheduleView";
+import { MedsView } from "@/components/app/views/MedsView";
+import { RoutineCard } from "@/components/app/RoutineCard";
 import { CoachPanel } from "@/components/app/CoachPanel";
 import { AddFoodSheet } from "@/components/app/AddFoodSheet";
-import { buildSchedule } from "@/core/schedule/schedule";
-import { useDiary } from "@/lib/diary-store";
-import { loggedRecipeIds, summarize } from "@/core/diary/day";
-import type { MealPlan as Plan } from "@/core/types";
 
-type Tab = "overview" | "plan" | "schedule" | "alerts" | "profile";
+type Tab = "overview" | "meds" | "plan" | "alerts" | "profile";
 
 const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "overview", label: "Tổng quan", icon: LayoutDashboard },
+  { id: "meds", label: "Thuốc", icon: Pill },
   { id: "plan", label: "Thực đơn", icon: UtensilsCrossed },
-  { id: "schedule", label: "Lịch", icon: CalendarClock },
   { id: "alerts", label: "Cảnh báo", icon: ShieldAlert },
   { id: "profile", label: "Hồ sơ", icon: UserRound },
 ];
@@ -41,12 +42,22 @@ const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
 export function Workspace({ profile }: { profile: ProfileInput }) {
   const { save, reset } = useProfile();
   const { entries, add, remove } = useDiary();
+  const { plans, logs, today, addPlan, removePlan, toggleDose, drugIds } =
+    useMeds();
+
   const [tab, setTab] = useState<Tab>("overview");
   const [seed, setSeed] = useState(7);
   const [addOpen, setAddOpen] = useState(false);
 
-  const targets = useMemo(() => computeTargets(profile), [profile]);
-  const active = useMemo(() => evaluateRules(profile), [profile]);
+  // The medication schedule is the source of truth for which drugs are active,
+  // so the rule engine always reflects what the user actually takes.
+  const rulesProfile = useMemo<ProfileInput>(
+    () => ({ ...profile, drugIds }),
+    [profile, drugIds],
+  );
+
+  const targets = useMemo(() => computeTargets(rulesProfile), [rulesProfile]);
+  const active = useMemo(() => evaluateRules(rulesProfile), [rulesProfile]);
   const constraints = useMemo(
     () => buildConstraints(active, targets.sodiumMg),
     [active, targets],
@@ -78,7 +89,19 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
 
   const loggedIds = useMemo(() => loggedRecipeIds(entries), [entries]);
 
-  const handleToggleLog = (meal: Plan["meals"][number]) => {
+  const routine = useMemo(
+    () => buildSchedule({ profile, plan, active, targets: effectiveTarget }),
+    [profile, plan, active, effectiveTarget],
+  );
+
+  const handleSwap = (slot: MealSlot) => {
+    const used = new Set(plan.meals.map((m) => m.recipe.id));
+    setPlan(
+      swapMeal(plan, slot, constraints.excludeTags, constraints.preferTags, used),
+    );
+  };
+
+  const handleToggleLog = (meal: MealPlan["meals"][number]) => {
     const existing = entries.find(
       (e) =>
         e.source === "recipe" &&
@@ -96,13 +119,6 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
       name: meal.recipe.name,
       nutrition: meal.nutrition,
     });
-  };
-
-  const handleSwap = (slot: MealSlot) => {
-    const used = new Set(plan.meals.map((m) => m.recipe.id));
-    setPlan(
-      swapMeal(plan, slot, constraints.excludeTags, constraints.preferTags, used),
-    );
   };
 
   return (
@@ -146,16 +162,31 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
 
       <main className="mx-auto max-w-[1080px] px-5 pt-3">
         {tab === "overview" ? (
-          <Dashboard
-            profile={profile}
-            targets={effectiveTarget}
-            plan={plan}
+          <div className="space-y-4">
+            <Dashboard
+              profile={profile}
+              targets={effectiveTarget}
+              plan={plan}
+              active={active}
+              summary={summary}
+              entries={entries}
+              onRemoveEntry={remove}
+              onAddFood={() => setAddOpen(true)}
+              onTab={(t) => setTab(t === "alerts" ? "alerts" : "plan")}
+            />
+            <RoutineCard items={routine} />
+          </div>
+        ) : null}
+
+        {tab === "meds" ? (
+          <MedsView
+            plans={plans}
+            logs={logs}
+            today={today}
             active={active}
-            summary={summary}
-            entries={entries}
-            onRemoveEntry={remove}
-            onAddFood={() => setAddOpen(true)}
-            onTab={(t) => setTab(t)}
+            onToggle={toggleDose}
+            onRemove={removePlan}
+            onAdd={addPlan}
           />
         ) : null}
 
@@ -174,21 +205,9 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
           <AlertsView active={active} constraints={constraints} />
         ) : null}
 
-        {tab === "schedule" ? (
-          <ScheduleView
-            items={buildSchedule({
-              profile,
-              plan,
-              active,
-              targets: effectiveTarget,
-            })}
-            profile={profile}
-          />
-        ) : null}
-
         {tab === "profile" ? (
           <ProfileView
-            profile={profile}
+            profile={rulesProfile}
             targets={targets}
             onChange={save}
             onReset={reset}
@@ -222,7 +241,7 @@ export function Workspace({ profile }: { profile: ProfileInput }) {
 
       <CoachPanel
         ctx={{
-          profile,
+          profile: rulesProfile,
           targets: effectiveTarget,
           plan,
           active,

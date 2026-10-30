@@ -8,6 +8,7 @@ import {
   Footprints,
   HeartPulse,
   Pill,
+  ScanLine,
   ShieldCheck,
   Sparkles,
   Utensils,
@@ -194,18 +195,17 @@ function Hero() {
           </span>
 
           <h1 className="mt-6 font-display text-[clamp(2.45rem,5vw,3.95rem)] font-extrabold text-navy">
-            Biết cơ thể mình cần gì —{" "}
+            Sống chung với bệnh mạn tính,{" "}
             <span className="relative inline-block whitespace-nowrap">
-              <span className="relative z-10">ngay hôm nay</span>
+              <span className="relative z-10">nhẹ nhàng hơn</span>
               <span className="absolute inset-x-0 bottom-[0.06em] z-0 h-[0.32em] rounded-sm bg-lime/70" />
             </span>
             .
           </h1>
 
           <p className="mt-6 max-w-[48ch] text-[16.5px] leading-relaxed text-muted">
-            HealthMate tính nhu cầu dinh dưỡng từ chính chỉ số của bạn, gợi ý
-            thực đơn Việt quen thuộc — và cảnh báo khi món ăn không hợp với loại
-            thuốc bạn đang dùng.
+            Nhắc đúng giờ uống thuốc, quét đơn bằng ảnh, theo dõi huyết áp và
+            cân nặng — cùng gợi ý bữa ăn phù hợp với bệnh nền của bạn.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -250,22 +250,22 @@ function Hero() {
 
 const features = [
   {
-    icon: Activity,
-    title: "Tính đúng cho người Việt",
-    body: "BMR, TDEE và macro theo Mifflin-St Jeor, dùng ngưỡng BMI châu Á thay vì ngưỡng phương Tây. Mọi con số đều hiện công thức.",
+    icon: Pill,
+    title: "Nhắc lịch uống thuốc",
+    body: "Thêm thuốc, chọn giờ, đánh dấu đã uống. Theo dõi tuân thủ 7 ngày và chuỗi ngày uống đủ liều.",
     tint: "bg-good-soft text-good",
   },
   {
-    icon: Utensils,
-    title: "Thực đơn Việt, không phải salad",
-    body: "Cơm tấm, phở, canh chua — gợi ý theo khẩu vị, ngân sách và thời gian nấu. Đổi món mà vẫn giữ đúng calo.",
-    tint: "bg-peach-soft text-peach-ink",
+    icon: ScanLine,
+    title: "Quét đơn bằng ảnh",
+    body: "Chụp đơn thuốc, app đọc tên thuốc và tạo lịch uống. Bạn xác nhận trước khi lưu — ảnh không được giữ lại.",
+    tint: "bg-lime-soft text-navy",
   },
   {
-    icon: Pill,
-    title: "Cảnh báo từ thuốc bạn uống",
-    body: "Nhập thuốc đang dùng, app suy ra ràng buộc ăn uống và vận động — kèm mức độ bằng chứng và nguồn tham khảo.",
-    tint: "bg-lime-soft text-navy",
+    icon: Activity,
+    title: "Ăn uống theo bệnh nền",
+    body: "Tăng huyết áp, tiểu đường, gout, suy thận — mỗi bệnh siết một ràng buộc khác nhau, kèm cảnh báo tương tác thuốc.",
+    tint: "bg-peach-soft text-peach-ink",
   },
 ] as const;
 
@@ -300,18 +300,18 @@ function Features() {
 const steps = [
   {
     n: "01",
-    title: "Nhập chỉ số",
-    body: "Chiều cao, cân nặng, mức vận động và nghề nghiệp. 3 bước, khoảng 30 giây.",
+    title: "Khai báo bệnh nền",
+    body: "Chọn bệnh mạn tính đang điều trị và thuốc đang dùng — hoặc chụp ảnh đơn thuốc để app đọc giúp.",
   },
   {
     n: "02",
-    title: "Nhận thực đơn",
-    body: "Bữa ăn được ghép theo mục tiêu calo và macro, có thể đổi món tùy thích.",
+    title: "Nhận lịch & thực đơn",
+    body: "App xếp giờ uống thuốc, nhắc mỗi ngày và gợi ý thực đơn Việt phù hợp với bệnh nền.",
   },
   {
     n: "03",
-    title: "Thêm thuốc & bệnh nền",
-    body: "App tự siết ràng buộc ăn uống, nhắc giờ uống thuốc và gợi ý vận động phù hợp.",
+    title: "Theo dõi mỗi ngày",
+    body: "Đánh dấu đã uống, ghi cân nặng, xem tỷ lệ tuân thủ và cảnh báo khi chỉ số đi lệch.",
   },
 ] as const;
 

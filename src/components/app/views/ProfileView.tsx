@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { RotateCcw, Search } from "lucide-react";
+import { RotateCcw, Pill } from "lucide-react";
 import type {
   ActivityLevel,
   Goal,
@@ -16,7 +15,6 @@ import {
   OCCUPATION_LABEL,
 } from "@/core/nutrition/targets";
 import { conditions } from "@/data/conditions";
-import { drugs } from "@/data/drugs";
 import { Card, SectionTitle } from "@/components/app/ui";
 import { nf } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -42,30 +40,18 @@ export function ProfileView({
   onChange: (p: ProfileInput) => void;
   onReset: () => void;
 }) {
-  const [query, setQuery] = useState("");
-
   const patch = <K extends keyof ProfileInput>(
     key: K,
     value: ProfileInput[K],
   ) => onChange({ ...profile, [key]: value });
 
-  const toggle = (key: "drugIds" | "conditionIds", id: string) => {
-    const list = profile[key];
+  const toggleCondition = (id: string) => {
+    const list = profile.conditionIds;
     patch(
-      key,
+      "conditionIds",
       list.includes(id) ? list.filter((x) => x !== id) : [...list, id],
     );
   };
-
-  const q = query.trim().toLowerCase();
-  const visibleDrugs = q
-    ? drugs.filter(
-        (d) =>
-          d.name.toLowerCase().includes(q) ||
-          d.brands.join(" ").toLowerCase().includes(q) ||
-          d.hint.toLowerCase().includes(q),
-      )
-    : drugs;
 
   return (
     <div className="space-y-4">
@@ -187,46 +173,32 @@ export function ProfileView({
               title="Thuốc đang dùng"
               action={
                 <span className="text-[11px] font-semibold text-muted">
-                  {profile.drugIds.length} đã chọn
+                  {profile.drugIds.length} loại
                 </span>
               }
             />
-            <div className="relative">
-              <Search className="pointer-events-none absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Tìm tên thuốc hoặc hoạt chất…"
-                className="h-10 w-full rounded-xl border border-line bg-white pr-3 pl-9 text-[12.5px] outline-none focus:border-navy/40"
-              />
+            <div className="flex items-center gap-2.5 rounded-2xl bg-canvas/70 px-3.5 py-3">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-navy">
+                <Pill className="h-4 w-4" />
+              </span>
+              <p className="text-[11.5px] leading-snug text-muted">
+                Thuốc và giờ uống được quản lý ở tab{" "}
+                <b className="font-semibold text-navy">Thuốc</b> — thêm, đổi giờ,
+                đánh dấu đã uống và xem cảnh báo riêng cho từng loại.
+              </p>
             </div>
-
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {visibleDrugs.map((d) => {
-                const on = profile.drugIds.includes(d.id);
-                return (
-                  <button
-                    key={d.id}
-                    type="button"
-                    onClick={() => toggle("drugIds", d.id)}
-                    className={cn(
-                      "rounded-pill border px-3 py-1.5 text-[11.5px] font-semibold transition-colors",
-                      on
-                        ? "border-navy bg-navy text-white"
-                        : "border-line bg-white text-navy hover:bg-canvas",
-                    )}
-                    title={d.hint}
+            {profile.drugIds.length > 0 ? (
+              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                {profile.drugIds.map((id) => (
+                  <span
+                    key={id}
+                    className="rounded-pill bg-white px-2.5 py-1 text-[11px] font-semibold text-navy ring-1 ring-line"
                   >
-                    {d.name}
-                  </button>
-                );
-              })}
-            </div>
-
-            <p className="mt-3 rounded-xl bg-canvas/70 px-3 py-2 text-[11px] leading-snug text-muted">
-              Đây là danh mục rút gọn 25 hoạt chất phổ biến. App không kê đơn và
-              không đổi liều — chỉ đưa ra ràng buộc ăn uống, sinh hoạt.
-            </p>
+                    {id}
+                  </span>
+                ))}
+              </div>
+            ) : null}
           </Card>
 
           <Card className="p-5">
@@ -238,7 +210,7 @@ export function ProfileView({
                   <button
                     key={c.id}
                     type="button"
-                    onClick={() => toggle("conditionIds", c.id)}
+                    onClick={() => toggleCondition(c.id)}
                     className={cn(
                       "rounded-pill border px-3 py-1.5 text-[11.5px] font-semibold transition-colors",
                       on

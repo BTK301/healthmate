@@ -1,8 +1,7 @@
 # HealthMate
 
-Trợ lý sức khỏe cá nhân cho người Việt: tính nhu cầu dinh dưỡng, gợi ý thực đơn
-hằng ngày, lịch sinh hoạt theo nghề nghiệp và cảnh báo ràng buộc ăn uống dựa trên
-thuốc đang dùng.
+Ứng dụng **quản lý bệnh mạn tính** cho người Việt: nhắc lịch uống thuốc, quét đơn
+thuốc bằng ảnh, theo dõi cân nặng và gợi ý bữa ăn phù hợp với bệnh nền.
 
 **Chạy local:** `npm install && npm run dev` → mở `/demo`. Không cần đăng ký,
 không cần API key, dữ liệu lưu bằng `localStorage`.
@@ -45,6 +44,10 @@ interface.
   tiêu, hiện calo/đạm/natri còn lại theo thời gian thực.
 - **Tiến độ cân nặng** — lưu theo ngày, biểu đồ SVG thuần (không thư viện), tốc
   độ thay đổi kg/tuần và BMI cập nhật theo lần ghi mới nhất.
+- **Nhắc lịch uống thuốc** — thêm thuốc, chọn giờ, đánh dấu đã uống; theo dõi
+  tuân thủ 7 ngày và chuỗi ngày uống đủ liều.
+- **Quét đơn thuốc** — chụp ảnh đơn, app đọc tên thuốc và tạo lịch; người dùng
+  xác nhận trước khi lưu, ảnh không được giữ lại.
 - **Thuốc & bệnh nền** — 25 hoạt chất, 8 bệnh nền, 17 quy tắc tương tác có mức
   bằng chứng và trích dẫn. Engine tự siết natri, chặn rượu bia, đổi gợi ý vận động.
 - **Lịch sinh hoạt** — timeline hợp nhất giờ uống thuốc, bữa ăn và vận động theo
@@ -66,7 +69,7 @@ interface.
 
 | Lịch sinh hoạt | Di động |
 |---|---|
-| ![](docs/screenshots/05-schedule.png) | ![](docs/screenshots/06-mobile.png) |
+| ![](docs/screenshots/05-meds.png) | ![](docs/screenshots/06-mobile.png) |
 
 ## Chất lượng
 

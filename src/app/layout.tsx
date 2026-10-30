@@ -18,9 +18,9 @@ const beVietnam = Be_Vietnam_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "HealthMate — Trợ lý sức khỏe cá nhân",
+  title: "HealthMate — Quản lý bệnh mạn tính",
   description:
-    "Tính nhu cầu dinh dưỡng, gợi ý thực đơn Việt và cảnh báo tương tác thuốc — dựa trên chính cơ thể và công việc của bạn.",
+    "Nhắc lịch uống thuốc, quét đơn thuốc bằng ảnh, theo dõi cân nặng và gợi ý bữa ăn phù hợp với bệnh nền — dành cho người Việt.",
   applicationName: "HealthMate",
   icons: {
     apple: "/apple-touch-icon.png",

@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "HealthMate — Trợ lý sức khỏe cá nhân",
+    name: "HealthMate — Quản lý bệnh mạn tính",
     short_name: "HealthMate",
     description:
-      "Tính nhu cầu dinh dưỡng, gợi ý thực đơn Việt, theo dõi cân nặng và cảnh báo tương tác thuốc.",
+      "Nhắc lịch uống thuốc, quét đơn thuốc bằng ảnh, theo dõi cân nặng và gợi ý bữa ăn theo bệnh nền.",
     start_url: "/demo",
     scope: "/",
     display: "standalone",
